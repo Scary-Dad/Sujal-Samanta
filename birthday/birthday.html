@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Message</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Inconsolata&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" integrity="sha384-hIoBPJpTadxgnHMYsCoA0zV2fO_fIj6kMgLKAkND3j1hPaMBs1QsdSkO/deYDAkW" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" integrity="sha384-KiWOvVjnN8qwZuNIMpLyxfzvMBimIIxqZfl9Twoax/syoY+HpwzC9TCvHrMsSTuy" crossorigin="anonymous">
+    <style>
+        /* Memories Button */
+
+@media (max-width: 480px) {
+  .memories-btn {
+    padding: 8px 14px;
+    font-size: 1rem;
+  }
+}
+.memories-btn:hover {
+  background: linear-gradient(90deg, #ff6e7f 0%, #FFD700 100%);
+  transform: scale(1.05);
+}
+
+/* Responsive adjustment for Memories Button */
+@media (max-width: 600px) {
+  .memories-btn {
+    top: 12px;
+    right: 12px;
+    padding: 8px 16px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Modal Styles */
+.memories-modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0; top: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+}
+.memories-modal.active {
+  display: flex;
+}
+.modal-content {
+  background: #222;
+  color: #fff;
+  border-radius: 18px;
+  padding: 32px 24px;
+  max-width: 500px;
+  width: 90vw;
+  box-shadow: 0 8px 32px #FFD70040;
+  position: relative;
+  text-align: center;
+}
+.close-btn {
+  position: absolute;
+  top: 18px;
+  right: 24px;
+  font-size: 2rem;
+  color: #FFD700;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+.close-btn:hover {
+  color: #ff6e7f;
+}
+.memories-gallery {
+  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+.memories-gallery img, .memories-gallery video {
+  max-width: 120px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #FFD70040;
+}
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Cormorant Garamond', serif;
+            overflow: hidden;
+        }
+        #terminal-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            background: #000;
+            transition: opacity 1.5s ease-out;
+        }
+        #terminal-text {
+            font-family: 'Inconsolata', monospace;
+            font-size: 1.2em;
+            color: #0f0;
+            white-space: pre-wrap;
+            text-align: left;
+        }
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background: #0f0;
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            from, to { background-color: transparent }
+            50% { background-color: #0f0; }
+        }
+        #surprise-content {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            opacity: 0;
+            transition: opacity 2s ease-in;
+            overflow-y: auto;
+            padding: 2em;
+            box-sizing: border-box;
+        }
+        .content-wrapper {
+            max-width: 800px;
+            margin: 40px auto;
+            text-align: center;
+            animation: fadeInContent 2s ease-in-out forwards;
+        }
+        @keyframes fadeInContent {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1 {
+            font-size: clamp(2.5rem, 10vw, 5rem);
+            font-weight: 700;
+            font-family: 'Cormorant Garamond', serif;
+            margin: 0;
+        }
+        .subtitle {
+            font-size: clamp(1.5rem, 6vw, 2.5rem);
+            color: #FFD700;
+            text-shadow: 2px 2px 4px #00000080;
+            margin-bottom: 30px;
+        }
+        p, .wish-item {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: #ddd;
+        }
+        .section {
+            margin-top: 50px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        h2 {
+            font-size: 2rem;
+            color: #FFD700;
+            margin-bottom: 20px;
+        }
+        .katex-display {
+            font-size: 1.5em;
+        }
+        .from {
+            text-align: right;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.8rem;
+            margin-top: 50px;
+        }
+        #stars, #stars2, #stars3 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="starfield"></canvas>
+
+    <div id="terminal-screen">
+        <div id="terminal-text"></div>
+    </div>
+
+    <div id="surprise-content">
+        <div class="content-wrapper">
+            <h1 class="subtitle">Variable Found: K. Bera!</h1>
+            <h1>Happy Birthday, Krishna Sir!</h1>
+            
+<p style="margin-top: 30px;">
+            Happy Birthday, Sir!<br>
+            For every complex problem you made simple 
+            I just wanted to say thank you for being the kind of teacher who feels like a friend. Your classroom has always been a place where I felt comfortable enough to ask questions, confident enough to make mistakes, and inspired enough to learn more.You are not only teacher you are my best friend. That's a gift that not many people have.
+            Wishing you the happiest of birthdays and a wonderful year ahead. Thank you for everything.
+            </p>
+                <h2>The Equation of Your Impact</h2>
+                <div id="equation"></div>
+                <p style="font-size: 1rem; color: #bbb; margin-top: 15px;">
+                    Where: 
+                    <i>K</i> = Keystone of our learning, 
+                    <i>R</i> = Respected by all, 
+                    <i>I</i> = Influential and iconic, 
+                    <i>S</i> = Steadfast in his support, 
+                    <i>H</i> = Honourable in character ,
+                    <i>N</i> =  Noteworthy in his field and
+                    <i>A</i> = Amazing in every way
+                </p>
+            </div>
+
+            <div class="section">
+                <h2>A Constellation of Wishes</h2>
+                <p class="wish-item">⭐ May you have a healthy and energetic year ahead.</p>
+                <p class="wish-item">⭐ May you find joy in all the small and big moments.</p>
+                <p class="wish-item">⭐ Continued success in all your personal and professional endeavors.</p>
+                <p class="wish-item">⭐ A sense of calm and peace in your life's journey.</p>
+                <p class="wish-item">⭐ May your legacy of knowledge and kindness shine forever.</p>
+            </div>
+            
+            <p class="from">
+                With the deepest respect and gratitude,<br>
+                Sujal Samanta
+            </p>
+        </div>
+    </div>
+
+<script>
+    const terminalTextElement = document.getElementById('terminal-text');
+    const terminalScreen = document.getElementById('terminal-screen');
+    const surpriseContent = document.getElementById('surprise-content');
+
+    const lines = [
+        "Initializing system check...",
+        "Loading universal constants...",
+        "Query received...",
+        "Calculating the most significant variable for a student's success..."
+    ];
+    let currentLine = 0;
+    let currentChar = 0;
+
+    function typeLine() {
+        if (currentLine < lines.length) {
+            const line = lines[currentLine];
+            if (currentChar < line.length) {
+                terminalTextElement.innerHTML += line.charAt(currentChar);
+                currentChar++;
+                setTimeout(typeLine, 50);
+            } else {
+                terminalTextElement.innerHTML += '<br>';
+                currentChar = 0;
+                currentLine++;
+                setTimeout(typeLine, 500);
+            }
+        } else {
+            terminalTextElement.innerHTML += '<span class="cursor">_</span>';
+            setTimeout(revealSurprise, 2000);
+        }
+    }
+
+    function revealSurprise() {
+    terminalScreen.style.opacity = '0';
+    surpriseContent.style.display = 'block';
+    setTimeout(() => {
+        terminalScreen.style.display = 'none';
+        surpriseContent.style.opacity = '1';
+        renderEquation();
+        startStarfield();
+        // Open Memories modal automatically
+        document.getElementById('memories-modal').classList.add('active');
+    }, 1500);
+}
+
+    function renderEquation() {
+        const equationDiv = document.getElementById('equation');
+        katex.render("(K \\cdot P \\cdot G \\cdot I)^{S_{\\text{years}}} = L_{\\infty}", equationDiv, {
+            displayMode: true,
+            throwOnError: false
+        });
+    }
+
+    function startStarfield() {
+        const canvas = document.createElement('canvas');
+        document.body.insertBefore(canvas, document.body.firstChild);
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let stars = [];
+        for (let i = 0; i < 200; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 1.5,
+                alpha: Math.random(),
+                speed: Math.random() * 0.2
+            });
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.globalAlpha = star.alpha;
+                ctx.fill();
+
+                star.y -= star.speed;
+                if (star.y < 0) {
+                    star.y = canvas.height;
+                }
+            });
+            requestAnimationFrame(drawStars);
+        }
+        drawStars();
+    }
+    
+    window.onload = typeLine;
+    
+</script>
+
+</body>
+</html>
